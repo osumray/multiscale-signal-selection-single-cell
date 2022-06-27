@@ -87,6 +87,12 @@ def persistent_laplacian(B_K_q, B_L_qp1, W_K_qm1, W_K_q, W_L_q, W_L_qp1):
 
 class PersistentRayleighQuotient(object):
     """
+    Computes the persistent Rayleigh quotient of a graph signal.
+
+    Parameters
+    ----------
+    normalised : bool
+        Whether to calculate the normalised persistent Rayleigh quotient.
     """
 
     def __init__(self, normalised=False):
@@ -116,6 +122,29 @@ class PersistentRayleighQuotient(object):
         return boundary, boundary_corners
 
     def fit(self, boundary, edge_weights, filtration):
+        """
+        Define graph and filtration that the persistent Rayleigh quotient
+        is taken with respect to.
+
+        Parameters
+        ----------
+        boundary : ndarray of shape (n, m)
+            The boundary matrix for the graph.
+            Each edge is given an orientation:
+            if e = (u, v) then e_u = -1 and e_v = 1.
+            If e is the ith edge and u and v are the jth and kth nodes respectively
+            then boundary[j, i] = e_u = -1 and boundary[k, i] = e_v = -1.
+            All other entries are zero.
+        edge_weights : ndarray of shape (m,)
+            Non-negative weight for each edge.
+        filtration : ndarray of shape (n,)
+            Filtration value for each node.
+
+        Side-effects
+        ------------
+        self.node_reorder is the ordering of indices of nodes by filtration value.
+        self.laplacian[i, j] is the persistent Laplacian between the ith and jth filtration values.
+        """
         boundary, boundary_corners = self._reorder_boundary(boundary, filtration)
         W_1 = np.diag(1 / edge_weights)
 
@@ -155,6 +184,19 @@ class PersistentRayleighQuotient(object):
             return rq
         
     def __call__(self, signal):
+        """
+        Calculate the persistent Rayleigh quotient of the signal.
+
+        Parameters
+        ----------
+        signal : ndarray of shape (n,)
+
+        Returns
+        -------
+        prq : list
+            prq[i][j] is the persistent Rayleigh quotient of the signal
+            between the ith and jth levels of the filtration.
+        """
         signal = signal[self.node_reorder]
         rqs = []
         for birth in self.laplacians:
