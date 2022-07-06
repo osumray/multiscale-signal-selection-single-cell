@@ -81,7 +81,8 @@ def persistent_laplacian(B_K_q, B_L_qp1, W_K_qm1, W_K_q, W_L_q, W_L_qp1):
     if n_K_q == n_L_q:
         persistent_laplacian = laplacian_up_L_q + laplacian_down_K_q
     else:
-        persistent_laplacian_up = schur_complement(laplacian_up_L_q, [i for i in range(n_K_q, n_L_q)])
+        persistent_laplacian_up = schur_complement(laplacian_up_L_q,
+                                                   [i for i in range(n_K_q, n_L_q)])
         persistent_laplacian = persistent_laplacian_up + laplacian_down_K_q
     return persistent_laplacian
 
