@@ -50,6 +50,7 @@ def weighted_transpose(M, W_1, W_2):
 def persistent_laplacian(B_K_q, B_L_qp1, W_K_qm1, W_K_q, W_L_q, W_L_qp1):
     """Compute the qth persistent Laplacian of a simplicial pair K, L.
     Uses algorithm 2 in https://arxiv.org/abs/2012.02808.
+    Assumes that the simplices are ordered such that the simplices in K are first.
 
     Parameters
     ----------
