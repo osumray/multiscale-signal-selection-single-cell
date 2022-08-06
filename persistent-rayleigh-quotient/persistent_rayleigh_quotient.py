@@ -195,8 +195,8 @@ class PersistentRayleighQuotient(object):
 
         Returns
         -------
-        prq : list
-            prq[i][j] is the persistent Rayleigh quotient of the signal
+        rqs : list of lists
+            rqs[i][j] is the persistent Rayleigh quotient of the signal
             between the ith and jth levels of the filtration.
         """
         signal = signal[self.node_reorder]
@@ -209,7 +209,31 @@ class PersistentRayleighQuotient(object):
                 rqs_birth.append(rq)
             rqs.append(rqs_birth)
         return rqs
-       
+
+    @staticmethod
+    def to_image(rqs):
+        """
+        Convert the output from PersistentRayleighQuotient.__call__
+        into a 2D masked image.
+
+        Parameters
+        ----------
+        rqs : list of lists
+            prq[i][j] is the persistent Rayleigh quotient of the signal
+            between the ith and jth levels of the filtration.
+
+        Returns
+        ---------
+        img : numpy masked array of shape (len(prq), len(prq))
+            img[i, j] = prq[j][i]
+        """
+        img = np.full((len(rqs),)*2, -1, dtype=float)
+        for i, row in enumerate(rqs):
+            img[-len(row):, i] = row
+        img = np.ma.masked_where(img == -1, img)
+        return img
+
+               
 if __name__ == '__main__':
     test = {'boundary' : np.array([[-1, -1],
                                    [ 1,  0],
