@@ -116,9 +116,9 @@ class PersistentRayleighQuotient(object):
         edge_reorder = np.argsort(edge_filtration)
         edge_filtration = edge_filtration[edge_reorder]
         boundary = boundary[node_reorder, :][:, edge_reorder]
-
-        node_sublevel_set_size = [ sum(filtration <= t) for t in filt_numbers]
-        edge_sublevel_set_size = [ sum(edge_filtration <= t) for t in filt_numbers]
+        filt_numbers = np.unique(filtration)
+        node_sublevel_set_size = [sum(filtration <= t) for t in filt_numbers]
+        edge_sublevel_set_size = [sum(edge_filtration <= t) for t in filt_numbers]
         boundary_corners = list(zip(node_sublevel_set_size, edge_sublevel_set_size))
          
         return boundary, boundary_corners
